@@ -1,4 +1,4 @@
-package ru.job4j.bot.recommendation;
+package ru.job4j.bmb.recommendation;
 
 public class RecommendationEngine {
 }

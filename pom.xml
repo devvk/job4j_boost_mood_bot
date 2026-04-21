@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ru.job4j.bot</groupId>
+    <groupId>ru.job4j.bmb</groupId>
     <artifactId>job4j_boost_mood_bot</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
-    <name>Job4j Boost Mood Bot</name>
+    <name>BoostMoodBot</name>
 
     <properties>
         <java.version>21</java.version>

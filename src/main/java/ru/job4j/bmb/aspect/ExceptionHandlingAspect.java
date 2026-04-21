@@ -1,4 +1,4 @@
-package ru.job4j.bot.aspect;
+package ru.job4j.bmb.aspect;
 
 public class ExceptionHandlingAspect {
 }
