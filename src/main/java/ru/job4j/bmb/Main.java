@@ -10,8 +10,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 import ru.job4j.bmb.services.TgRemoteService;
 
-import java.util.Arrays;
-
 @SpringBootApplication
 public class Main {
     public static void main(String[] args) {
