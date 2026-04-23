@@ -20,4 +20,4 @@ logs
 out
 *.log
 
-dev/*
+config/*
