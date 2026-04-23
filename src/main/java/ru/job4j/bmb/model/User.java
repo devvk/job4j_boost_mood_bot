@@ -9,4 +9,16 @@ public class User {
     public long getClientId() {
         return clientId;
     }
+
+    public void setClientId(long clientId) {
+        this.clientId = clientId;
+    }
+
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
+    }
+
+    public long getChatId() {
+        return chatId;
+    }
 }
