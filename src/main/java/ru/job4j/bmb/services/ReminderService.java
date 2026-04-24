@@ -1,24 +1,27 @@
 package ru.job4j.bmb.services;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.lang.NonNull;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import ru.job4j.bmb.repository.UserRepository;
 
-public class ReminderService implements BeanNameAware {
+@Service
+public class ReminderService {
+    private final TgRemoteService tgRemoteService;
+    private final UserRepository userRepository;
 
-    @Override
-    public void setBeanName(@NonNull String name) {
-        System.out.println("Bean name: " + name);
+    public ReminderService(TgRemoteService tgRemoteService, UserRepository userRepository) {
+        this.tgRemoteService = tgRemoteService;
+        this.userRepository = userRepository;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println(getClass().getSimpleName() + " init.");
-    }
-
-    @PreDestroy
-    public void destroy() {
-        System.out.println(getClass().getSimpleName() + " destroy.");
+    @Scheduled(fixedRateString = "${remind.period}")
+    public void ping() {
+        for (var user : userRepository.findAll()) {
+            var message = new SendMessage();
+            message.setChatId(user.getChatId());
+            message.setText("Ping");
+            tgRemoteService.send(message);
+        }
     }
 }
