@@ -12,7 +12,7 @@ public class Achievement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private long createAt;
+    private long createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -30,12 +30,12 @@ public class Achievement {
         this.id = id;
     }
 
-    public long getCreateAt() {
-        return createAt;
+    public long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAt(long createAt) {
-        this.createAt = createAt;
+    public void setCreatedAt(long createAt) {
+        this.createdAt = createAt;
     }
 
     public User getUser() {
