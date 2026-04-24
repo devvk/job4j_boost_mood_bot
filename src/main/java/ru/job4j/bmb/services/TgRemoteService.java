@@ -14,7 +14,6 @@ import ru.job4j.bmb.repository.UserRepository;
 public class TgRemoteService extends TelegramLongPollingBot {
 
     private final String botName;
-    private final String botToken;
     private final UserRepository userRepository;
     private final TgUI tgUI;
 
@@ -22,15 +21,10 @@ public class TgRemoteService extends TelegramLongPollingBot {
                            @Value("${telegram.bot.token}") String botToken,
                            UserRepository userRepository,
                            TgUI tgUI) {
+        super(botToken);
         this.botName = botName;
-        this.botToken = botToken;
         this.userRepository = userRepository;
         this.tgUI = tgUI;
-    }
-
-    @Override
-    public String getBotToken() {
-        return botToken;
     }
 
     @Override

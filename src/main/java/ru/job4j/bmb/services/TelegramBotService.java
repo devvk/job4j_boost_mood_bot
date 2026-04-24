@@ -30,8 +30,4 @@ public class TelegramBotService implements BeanNameAware {
     public void destroy() {
         System.out.println(getClass().getSimpleName() + " destroy.");
     }
-
-    public void receive(Content content) {
-        handler.receive(content);
-    }
 }

@@ -26,4 +26,8 @@ public class Content {
     public void setAudio(InputFile inputFile) {
         this.audio = inputFile;
     }
+
+    public void setMarkup(InlineKeyboardMarkup markup) {
+        this.markup = markup;
+    }
 }
