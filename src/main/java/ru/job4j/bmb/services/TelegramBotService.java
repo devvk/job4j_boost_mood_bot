@@ -1,33 +1,75 @@
 package ru.job4j.bmb.services;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.lang.NonNull;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.job4j.bmb.content.Content;
 
 @Service
-public class TelegramBotService implements BeanNameAware {
+public class TelegramBotService extends TelegramLongPollingBot implements SendContent {
+
+    private final String botName;
+    private final BotCommandHandler botCommandHandler;
+
+    public TelegramBotService(@Value("${telegram.bot.name}") String botName,
+                              @Value("${telegram.bot.token}") String botToken,
+                              BotCommandHandler botCommandHandler) {
+        super(botToken);
+        this.botName = botName;
+        this.botCommandHandler = botCommandHandler;
+    }
 
     @Override
-    public void setBeanName(@NonNull String name) {
-        System.out.println("Bean name: " + name);
+    public void onUpdateReceived(Update update) {
+        if (update.hasCallbackQuery()) {
+            botCommandHandler.handleCallback(update.getCallbackQuery())
+                    .ifPresent(this::send);
+        } else if (update.hasMessage() && update.getMessage().getText() != null) {
+            botCommandHandler.commands(update.getMessage())
+                    .ifPresent(this::send);
+        }
     }
 
-    private final BotCommandHandler handler;
-
-    public TelegramBotService(BotCommandHandler handler) {
-        this.handler = handler;
+    @Override
+    public String getBotUsername() {
+        return botName;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println(getClass().getSimpleName() + " init.");
-    }
-
-    @PreDestroy
-    public void destroy() {
-        System.out.println(getClass().getSimpleName() + " destroy.");
+    @Override
+    public void send(Content content) {
+        try {
+            if (content.getAudio() != null) {
+                SendAudio message = new SendAudio();
+                message.setChatId(content.getChatId());
+                message.setAudio(content.getAudio());
+                if (content.getText() != null) {
+                    message.setCaption(content.getText());
+                }
+                execute(message);
+            } else if (content.getPhoto() != null) {
+                SendPhoto message = new SendPhoto();
+                message.setChatId(content.getChatId());
+                message.setPhoto(content.getPhoto());
+                if (content.getText() != null) {
+                    message.setCaption(content.getText());
+                }
+                execute(message);
+            } else if (content.getText() != null) {
+                SendMessage message = new SendMessage();
+                message.setChatId(content.getChatId());
+                message.setText(content.getText());
+                if (content.getMarkup() != null) {
+                    message.setReplyMarkup(content.getMarkup());
+                }
+                execute(message);
+            }
+        } catch (TelegramApiException e) {
+            throw new SendContentException(e.getMessage(), e);
+        }
     }
 }

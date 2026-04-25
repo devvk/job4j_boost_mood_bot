@@ -27,25 +27,28 @@ public class BotCommandHandler {
         long chatId = message.getChatId();
         Long clientId = message.getFrom().getId();
         return switch (text.toLowerCase()) {
-            case "start" -> handleStartCommand(chatId, clientId);
-            case "week_mood_log" -> moodService.weekMoodLogCommand(chatId, clientId);
-            case "month_mood_log" -> moodService.monthMoodLogCommand(chatId, clientId);
-            case "award" -> moodService.awards(chatId, clientId);
+            case "/start" -> handleStartCommand(chatId, clientId);
+            case "/week_mood_log" -> moodService.weekMoodLogCommand(chatId, clientId);
+            case "/month_mood_log" -> moodService.monthMoodLogCommand(chatId, clientId);
+            case "/award" -> moodService.awards(chatId, clientId);
             default -> Optional.empty();
         };
     }
 
     Optional<Content> handleCallback(CallbackQuery callback) {
         var moodId = Long.valueOf(callback.getData());
-        Optional<User> optionalUser = userRepository.findById(callback.getFrom().getId());
+        Optional<User> optionalUser = userRepository.findByClientId(callback.getFrom().getId());
         return optionalUser.map(user -> moodService.chooseMood(user, moodId));
     }
 
     private Optional<Content> handleStartCommand(long chatId, Long clientId) {
-        var user = new User();
-        user.setChatId(chatId);
-        user.setClientId(clientId);
-        userRepository.save(user);
+        User user = userRepository.findByClientId(clientId)
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setChatId(chatId);
+                    newUser.setClientId(clientId);
+                    return userRepository.save(newUser);
+                });
         var content = new Content(user.getChatId());
         content.setText("Как настроение?");
         content.setMarkup(tgUI.buildButtons());

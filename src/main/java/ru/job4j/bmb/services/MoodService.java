@@ -47,7 +47,7 @@ public class MoodService {
 
     public Optional<Content> weekMoodLogCommand(long chatId, Long clientId) {
         var content = new Content(chatId);
-        Optional<User> user = userRepository.findById(clientId);
+        Optional<User> user = userRepository.findByClientId(clientId);
         if (user.isPresent()) {
             long weekAgo = Instant.now().minus(7, ChronoUnit.DAYS).getEpochSecond();
             List<MoodLog> logs = moodLogRepository.findByUserAndCreatedAtAfter(user.get(), weekAgo);
@@ -59,7 +59,7 @@ public class MoodService {
 
     public Optional<Content> monthMoodLogCommand(long chatId, Long clientId) {
         var content = new Content(chatId);
-        Optional<User> user = userRepository.findById(clientId);
+        Optional<User> user = userRepository.findByClientId(clientId);
         if (user.isPresent()) {
             long monthAgo = Instant.now().minus(30, ChronoUnit.DAYS).getEpochSecond();
             List<MoodLog> logs = moodLogRepository.findByUserAndCreatedAtAfter(user.get(), monthAgo);
@@ -70,7 +70,7 @@ public class MoodService {
 
     public Optional<Content> awards(long chatId, Long clientId) {
         var content = new Content(chatId);
-        Optional<User> user = userRepository.findById(clientId);
+        Optional<User> user = userRepository.findByClientId(clientId);
         if (user.isPresent()) {
             List<Achievement> achievements = achievementRepository.findByUser(user.get());
             content.setText(formatAchievements(achievements));

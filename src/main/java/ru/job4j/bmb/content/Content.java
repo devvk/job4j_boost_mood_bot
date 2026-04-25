@@ -30,4 +30,24 @@ public class Content {
     public void setMarkup(InlineKeyboardMarkup markup) {
         this.markup = markup;
     }
+
+    public Long getChatId() {
+        return chatId;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public InputFile getPhoto() {
+        return photo;
+    }
+
+    public InlineKeyboardMarkup getMarkup() {
+        return markup;
+    }
+
+    public InputFile getAudio() {
+        return audio;
+    }
 }
