@@ -51,10 +51,6 @@ public class MoodLog {
         return mood;
     }
 
-    public void setMood(Mood mood) {
-        this.mood = mood;
-    }
-
     public long getCreatedAt() {
         return createdAt;
     }

@@ -36,18 +36,6 @@ public class Mood {
         return text;
     }
 
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public boolean isGood() {
-        return good;
-    }
-
-    public void setGood(boolean good) {
-        this.good = good;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

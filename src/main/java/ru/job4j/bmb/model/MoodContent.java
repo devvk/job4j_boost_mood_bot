@@ -38,16 +38,8 @@ public class MoodContent {
         return mood;
     }
 
-    public void setMood(Mood mood) {
-        this.mood = mood;
-    }
-
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     @Override

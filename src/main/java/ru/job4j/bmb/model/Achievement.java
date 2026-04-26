@@ -34,10 +34,6 @@ public class Achievement {
         return createdAt;
     }
 
-    public void setCreatedAt(long createAt) {
-        this.createdAt = createAt;
-    }
-
     public User getUser() {
         return user;
     }
@@ -48,10 +44,6 @@ public class Achievement {
 
     public Award getAward() {
         return award;
-    }
-
-    public void setAward(Award award) {
-        this.award = award;
     }
 
     @Override

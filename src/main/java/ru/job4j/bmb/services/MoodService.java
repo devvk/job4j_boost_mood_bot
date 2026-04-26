@@ -41,7 +41,7 @@ public class MoodService {
     public Content chooseMood(User user, Long moodId) {
         Mood mood = new Mood();
         mood.setId(moodId);
-        moodLogRepository.save(new MoodLog(user, mood, Instant.now().getEpochSecond()));
+        moodLogRepository.save(new MoodLog(user, mood, Instant.now().toEpochMilli()));
         return recommendationEngine.recommendFor(user.getChatId(), moodId);
     }
 

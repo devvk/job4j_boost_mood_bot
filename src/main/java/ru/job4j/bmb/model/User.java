@@ -18,10 +18,6 @@ public class User {
     @Column(name = "chat_id")
     private long chatId;
 
-    public long getClientId() {
-        return clientId;
-    }
-
     public void setClientId(long clientId) {
         this.clientId = clientId;
     }
@@ -32,6 +28,10 @@ public class User {
 
     public long getChatId() {
         return chatId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override

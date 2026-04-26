@@ -3,24 +3,41 @@ package ru.job4j.bmb.services;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import ru.job4j.bmb.content.Content;
-import ru.job4j.bmb.repository.UserRepository;
+import ru.job4j.bmb.model.User;
+import ru.job4j.bmb.repository.MoodLogRepository;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Service
 public class ReminderService {
-    private final TelegramBotService telegramBotService;
-    private final UserRepository userRepository;
 
-    public ReminderService(TelegramBotService telegramBotService, UserRepository userRepository) {
-        this.telegramBotService = telegramBotService;
-        this.userRepository = userRepository;
+    private final SendContent sendContent;
+    private final MoodLogRepository moodLogRepository;
+    private final TgUI tgUI;
+
+    public ReminderService(SendContent sendContent, MoodLogRepository moodLogRepository, TgUI tgUI) {
+        this.sendContent = sendContent;
+        this.moodLogRepository = moodLogRepository;
+        this.tgUI = tgUI;
     }
 
     @Scheduled(fixedRateString = "${remind.period}")
-    public void ping() {
-        for (var user : userRepository.findAll()) {
+    public void remindUsers() {
+        var startOfDay = LocalDate.now()
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+        var endOfDay = LocalDate.now()
+                .plusDays(1)
+                .atStartOfDay(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli() - 1;
+        for (User user : moodLogRepository.findUsersWhoDidNotVoteToday(startOfDay, endOfDay)) {
             Content content = new Content(user.getChatId());
-            content.setText("Ping");
-            telegramBotService.send(content);
+            content.setText("Как настроение?");
+            content.setMarkup(tgUI.buildButtons());
+            sendContent.send(content);
         }
     }
 }
