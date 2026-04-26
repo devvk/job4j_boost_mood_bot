@@ -39,6 +39,14 @@ public class Award {
         return title;
     }
 
+    public int getDays() {
+        return days;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {

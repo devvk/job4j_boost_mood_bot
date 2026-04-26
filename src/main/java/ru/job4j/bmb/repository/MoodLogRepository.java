@@ -19,10 +19,12 @@ public interface MoodLogRepository extends CrudRepository<MoodLog, Long> {
             SELECT u
             FROM User u
             WHERE u.id NOT IN (
-                SELECT m.user.id
-                FROM MoodLog m
-                WHERE m.createdAt BETWEEN ?1 AND ?2
+                SELECT ml.user.id
+                FROM MoodLog ml
+                WHERE ml.createdAt BETWEEN ?1 AND ?2
             )
             """)
     List<User> findUsersWhoDidNotVoteToday(long startOfDay, long endOfDay);
+
+    List<MoodLog> findByUserOrderByCreatedAtDesc(User user);
 }

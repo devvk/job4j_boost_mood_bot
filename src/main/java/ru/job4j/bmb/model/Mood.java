@@ -36,6 +36,10 @@ public class Mood {
         return text;
     }
 
+    public boolean isGood() {
+        return good;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
