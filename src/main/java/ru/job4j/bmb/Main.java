@@ -5,10 +5,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import ru.job4j.bmb.config.FakeTelegramBotCondition;
+import ru.job4j.bmb.config.RealTelegramBotCondition;
 import ru.job4j.bmb.model.Award;
 import ru.job4j.bmb.model.Mood;
 import ru.job4j.bmb.model.MoodContent;
@@ -34,6 +37,7 @@ public class Main {
     }
 
     @Bean
+    @Conditional(RealTelegramBotCondition.class)
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
             var bot = ctx.getBean(TelegramBotService.class);
@@ -45,6 +49,12 @@ public class Main {
                 e.printStackTrace();
             }
         };
+    }
+
+    @Bean
+    @Conditional(FakeTelegramBotCondition.class)
+    public CommandLineRunner commandLineRunnerFake() {
+        return args -> System.out.println("Fake Telegram bot started");
     }
 
     @Bean

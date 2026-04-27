@@ -1,6 +1,7 @@
 package ru.job4j.bmb.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendAudio;
@@ -8,9 +9,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.job4j.bmb.config.RealTelegramBotCondition;
 import ru.job4j.bmb.content.Content;
 
 @Service
+@Conditional(RealTelegramBotCondition.class)
 public class TelegramBotService extends TelegramLongPollingBot implements SendContent {
 
     private final String botName;
@@ -27,11 +30,9 @@ public class TelegramBotService extends TelegramLongPollingBot implements SendCo
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasCallbackQuery()) {
-            botCommandHandler.handleCallback(update.getCallbackQuery())
-                    .ifPresent(this::send);
+            botCommandHandler.handleCallback(update.getCallbackQuery()).ifPresent(this::send);
         } else if (update.hasMessage() && update.getMessage().getText() != null) {
-            botCommandHandler.commands(update.getMessage())
-                    .ifPresent(this::send);
+            botCommandHandler.commands(update.getMessage()).ifPresent(this::send);
         }
     }
 
