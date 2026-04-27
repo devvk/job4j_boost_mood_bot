@@ -1,4 +1,4 @@
-package ru.job4j.bmb.services;
+package ru.job4j.bmb.service;
 
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;

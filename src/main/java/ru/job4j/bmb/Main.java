@@ -15,7 +15,7 @@ import ru.job4j.bmb.model.MoodContent;
 import ru.job4j.bmb.repository.AwardRepository;
 import ru.job4j.bmb.repository.MoodContentRepository;
 import ru.job4j.bmb.repository.MoodRepository;
-import ru.job4j.bmb.services.TelegramBotService;
+import ru.job4j.bmb.service.TelegramBotService;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package ru.job4j.bmb.content;
 
 import org.springframework.stereotype.Component;
-import ru.job4j.bmb.services.MoodContentService;
+import ru.job4j.bmb.service.MoodContentService;
 
 @Component
 public class ContentProviderText implements ContentProvider {

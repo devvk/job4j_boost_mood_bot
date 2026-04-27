@@ -1,8 +1,9 @@
-package ru.job4j.bmb.services;
+package ru.job4j.bmb.service;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import ru.job4j.bmb.content.Content;
+import ru.job4j.bmb.event.MoodSelectedEvent;
 import ru.job4j.bmb.model.Achievement;
 import ru.job4j.bmb.model.Mood;
 import ru.job4j.bmb.model.MoodLog;
@@ -46,7 +47,7 @@ public class MoodService {
         Mood mood = new Mood();
         mood.setId(moodId);
         moodLogRepository.save(new MoodLog(user, mood, Instant.now().toEpochMilli()));
-        applicationEventPublisher.publishEvent(new UserEvent(this, user));
+        applicationEventPublisher.publishEvent(new MoodSelectedEvent(user));
         return recommendationEngine.recommendFor(user.getChatId(), moodId);
     }
 
@@ -54,7 +55,7 @@ public class MoodService {
         var content = new Content(chatId);
         Optional<User> user = userRepository.findByClientId(clientId);
         if (user.isPresent()) {
-            long weekAgo = Instant.now().minus(7, ChronoUnit.DAYS).getEpochSecond();
+            long weekAgo = Instant.now().minus(7, ChronoUnit.DAYS).toEpochMilli();
             List<MoodLog> logs = moodLogRepository.findByUserAndCreatedAtAfter(user.get(), weekAgo);
             content.setText(formatMoodLogs(logs, "Mood logs for week"));
 
@@ -66,7 +67,7 @@ public class MoodService {
         var content = new Content(chatId);
         Optional<User> user = userRepository.findByClientId(clientId);
         if (user.isPresent()) {
-            long monthAgo = Instant.now().minus(30, ChronoUnit.DAYS).getEpochSecond();
+            long monthAgo = Instant.now().minus(30, ChronoUnit.DAYS).toEpochMilli();
             List<MoodLog> logs = moodLogRepository.findByUserAndCreatedAtAfter(user.get(), monthAgo);
             content.setText(formatMoodLogs(logs, "Mood logs for month"));
         }
@@ -89,7 +90,7 @@ public class MoodService {
         }
         var sb = new StringBuilder(title + ":\n");
         logs.forEach(log -> {
-            String formattedDate = formatter.format(Instant.ofEpochSecond(log.getCreatedAt()));
+            String formattedDate = formatter.format(Instant.ofEpochMilli(log.getCreatedAt()));
             sb.append(formattedDate).append(": ").append(log.getMood().getText()).append("\n");
         });
         return sb.toString();
@@ -101,7 +102,7 @@ public class MoodService {
         }
         var sb = new StringBuilder("Awards:\n");
         achievements.forEach(log -> {
-            String formattedDate = formatter.format(Instant.ofEpochSecond(log.getCreatedAt()));
+            String formattedDate = formatter.format(Instant.ofEpochMilli(log.getCreatedAt()));
             sb.append(formattedDate).append(": ").append(log.getAward().getTitle()).append("\n");
         });
         return sb.toString();
