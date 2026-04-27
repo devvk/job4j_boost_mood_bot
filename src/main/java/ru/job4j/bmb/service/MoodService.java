@@ -102,7 +102,7 @@ public class MoodService {
         var sb = new StringBuilder("Awards:\n");
         achievements.forEach(log -> {
             String formattedDate = formatter.format(Instant.ofEpochMilli(log.getCreatedAt()));
-            sb.append(formattedDate).append(": ").append(log.getAward().getTitle()).append("\n");
+            sb.append(formattedDate).append(": ").append(log.getAward().getDescription()).append("\n");
         });
         return sb.toString();
     }
