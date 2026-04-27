@@ -40,7 +40,7 @@ public class Main {
             var botsApi = new TelegramBotsApi(DefaultBotSession.class);
             try {
                 botsApi.registerBot(bot);
-                System.out.println("Бот успешно зарегистрирован");
+                System.out.println("Бот успешно зарегистрирован.");
             } catch (TelegramApiException e) {
                 e.printStackTrace();
             }
