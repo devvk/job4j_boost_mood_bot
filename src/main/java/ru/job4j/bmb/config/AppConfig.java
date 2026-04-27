@@ -1,15 +1,9 @@
 package ru.job4j.bmb.config;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
-@Component
+@Configuration
+@EnableAspectJAutoProxy
 public class AppConfig {
-
-    @Value("${telegram.bot.name}")
-    private String botName;
-
-    public void printConfig() {
-        System.out.println("telegram.bot.name: " + botName);
-    }
 }
