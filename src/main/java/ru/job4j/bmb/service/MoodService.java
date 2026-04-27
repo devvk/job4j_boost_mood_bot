@@ -26,7 +26,7 @@ public class MoodService {
     private final RecommendationEngine recommendationEngine;
     private final UserRepository userRepository;
     private final AchievementRepository achievementRepository;
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher eventPublisher;
     private final DateTimeFormatter formatter = DateTimeFormatter
             .ofPattern("dd-MM-yyyy HH:mm")
             .withZone(ZoneId.systemDefault());
@@ -35,19 +35,19 @@ public class MoodService {
                        RecommendationEngine recommendationEngine,
                        UserRepository userRepository,
                        AchievementRepository achievementRepository,
-                       ApplicationEventPublisher applicationEventPublisher) {
+                       ApplicationEventPublisher eventPublisher) {
         this.moodLogRepository = moodLogRepository;
         this.recommendationEngine = recommendationEngine;
         this.userRepository = userRepository;
         this.achievementRepository = achievementRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
+        this.eventPublisher = eventPublisher;
     }
 
     public Content chooseMood(User user, Long moodId) {
         Mood mood = new Mood();
         mood.setId(moodId);
         moodLogRepository.save(new MoodLog(user, mood, Instant.now().toEpochMilli()));
-        applicationEventPublisher.publishEvent(new MoodSelectedEvent(user));
+        eventPublisher.publishEvent(new MoodSelectedEvent(user));
         return recommendationEngine.recommendFor(user.getChatId(), moodId);
     }
 
@@ -58,7 +58,6 @@ public class MoodService {
             long weekAgo = Instant.now().minus(7, ChronoUnit.DAYS).toEpochMilli();
             List<MoodLog> logs = moodLogRepository.findByUserAndCreatedAtAfter(user.get(), weekAgo);
             content.setText(formatMoodLogs(logs, "Mood logs for week"));
-
         }
         return Optional.of(content);
     }
