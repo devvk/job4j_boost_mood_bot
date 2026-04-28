@@ -1,5 +1,7 @@
 package ru.job4j.bmb;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,13 +29,15 @@ import java.util.List;
 @SpringBootApplication
 public class Main {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
 
     @Bean
     public CommandLineRunner initContentApi(ApplicationContext ctx) {
-        return args -> System.out.println(ctx.getEnvironment().getProperty("telegram.bot.name"));
+        return args -> LOGGER.info(ctx.getEnvironment().getProperty("telegram.bot.name"));
     }
 
     @Bean
@@ -44,9 +48,9 @@ public class Main {
             var botsApi = new TelegramBotsApi(DefaultBotSession.class);
             try {
                 botsApi.registerBot(bot);
-                System.out.println("Бот успешно зарегистрирован.");
+                LOGGER.info("Бот успешно зарегистрирован.");
             } catch (TelegramApiException e) {
-                e.printStackTrace();
+                LOGGER.error("Ошибка регистрации Telegram бота", e);
             }
         };
     }
@@ -54,7 +58,7 @@ public class Main {
     @Bean
     @Conditional(FakeTelegramBotCondition.class)
     public CommandLineRunner commandLineRunnerFake() {
-        return args -> System.out.println("Fake Telegram bot started");
+        return args -> LOGGER.info("Fake Telegram bot started");
     }
 
     @Bean
