@@ -37,6 +37,7 @@ public class MoodLogFakeRepository extends CrudRepositoryFake<MoodLog, Long> imp
     @Override
     public List<MoodLog> findLatestMoodLogForEachUser() {
         return memory.values().stream()
+                .filter(moodLog -> moodLog.getUser().isAdviceReminder())
                 .collect(Collectors.groupingBy(MoodLog::getUser,
                         Collectors.maxBy(Comparator.comparing(MoodLog::getCreatedAt))))
                 .values().stream()
