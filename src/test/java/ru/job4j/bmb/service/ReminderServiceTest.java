@@ -40,7 +40,13 @@ class ReminderServiceTest {
         moodLog.setCreatedAt(yesterday);
         moodLogRepository.save(moodLog);
         var tgUI = new TgUI(moodRepository);
-        new ReminderService(sendContent, moodLogRepository, tgUI).remindUsers();
+        var adviceService = new AdviceService(null) {
+            @Override
+            public String getAdviceByMood(Mood mood) {
+                return "test advice";
+            }
+        };
+        new ReminderService(sendContent, moodLogRepository, adviceService, tgUI).sendMoodReminder();
         assertThat(result).isNotEmpty();
         assertThat(result.getFirst().getMarkup().getKeyboard().getFirst().getFirst().getText()).isEqualTo("Good");
     }

@@ -18,6 +18,13 @@ public class User {
     @Column(name = "chat_id")
     private long chatId;
 
+    @Column(name = "advice_reminder", nullable = false)
+    private boolean adviceReminder = true;
+
+    public void setAdviceReminder(boolean adviceReminder) {
+        this.adviceReminder = adviceReminder;
+    }
+
     public void setClientId(long clientId) {
         this.clientId = clientId;
     }

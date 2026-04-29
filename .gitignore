@@ -23,3 +23,4 @@ out
 config/*
 /moodbot.mv.db
 /moodbot.trace.db
+/moodbot.lock.db

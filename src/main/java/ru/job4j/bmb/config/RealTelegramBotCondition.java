@@ -9,6 +9,6 @@ public class RealTelegramBotCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
-        return "real".equalsIgnoreCase(context.getEnvironment().getProperty("telegram.mode"));
+        return "true".equalsIgnoreCase(context.getEnvironment().getProperty("telegram.mode.real"));
     }
 }

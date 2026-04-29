@@ -6,8 +6,9 @@ import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.lang.NonNull;
 
 public class FakeTelegramBotCondition implements Condition {
+
     @Override
     public boolean matches(ConditionContext context, @NonNull AnnotatedTypeMetadata metadata) {
-        return "fake".equalsIgnoreCase(context.getEnvironment().getProperty("telegram.mode"));
+        return !"true".equalsIgnoreCase(context.getEnvironment().getProperty("telegram.mode.real"));
     }
 }

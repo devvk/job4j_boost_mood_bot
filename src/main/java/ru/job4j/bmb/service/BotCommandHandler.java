@@ -14,11 +14,14 @@ public class BotCommandHandler {
 
     private final UserRepository userRepository;
     private final MoodService moodService;
+    private final AdviceService adviceService;
     private final TgUI tgUI;
 
-    public BotCommandHandler(UserRepository userRepository, MoodService moodService, TgUI tgUI) {
+    public BotCommandHandler(UserRepository userRepository, MoodService moodService,
+                             AdviceService adviceService, TgUI tgUI) {
         this.userRepository = userRepository;
         this.moodService = moodService;
+        this.adviceService = adviceService;
         this.tgUI = tgUI;
     }
 
@@ -28,6 +31,9 @@ public class BotCommandHandler {
         Long clientId = message.getFrom().getId();
         return switch (text.toLowerCase()) {
             case "/start" -> handleStartCommand(chatId, clientId);
+            case "/daily_advice" -> adviceService.dailyAdviceCommand(chatId);
+            case "/advice_on" -> adviceService.adviceOn(chatId, clientId);
+            case "/advice_off" -> adviceService.adviceOff(chatId, clientId);
             case "/week_log" -> moodService.weekMoodLogCommand(chatId, clientId);
             case "/month_log" -> moodService.monthMoodLogCommand(chatId, clientId);
             case "/awards" -> moodService.awards(chatId, clientId);

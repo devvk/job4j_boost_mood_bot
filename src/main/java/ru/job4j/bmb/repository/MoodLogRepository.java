@@ -27,4 +27,16 @@ public interface MoodLogRepository extends CrudRepository<MoodLog, Long> {
     List<User> findUsersWhoDidNotVoteToday(long startOfDay, long endOfDay);
 
     List<MoodLog> findByUserOrderByCreatedAtDesc(User user);
+
+    @Query("""
+            SELECT ml
+            FROM MoodLog ml
+            WHERE ml.user.adviceReminder = true
+            AND ml.createdAt = (
+                SELECT MAX(innerMl.createdAt)
+                FROM MoodLog innerMl
+                WHERE innerMl.user = ml.user
+            )
+            """)
+    List<MoodLog> findLatestMoodLogForEachUser();
 }

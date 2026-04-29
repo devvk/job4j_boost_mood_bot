@@ -8,6 +8,7 @@ import ru.job4j.bmb.model.User;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class MoodLogFakeRepository extends CrudRepositoryFake<MoodLog, Long> implements MoodLogRepository {
@@ -30,6 +31,16 @@ public class MoodLogFakeRepository extends CrudRepositoryFake<MoodLog, Long> imp
         return memory.values().stream()
                 .filter(moodLog -> moodLog.getUser().equals(user))
                 .sorted(Comparator.comparing(MoodLog::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MoodLog> findLatestMoodLogForEachUser() {
+        return memory.values().stream()
+                .collect(Collectors.groupingBy(MoodLog::getUser,
+                        Collectors.maxBy(Comparator.comparing(MoodLog::getCreatedAt))))
+                .values().stream()
+                .flatMap(Optional::stream)
                 .collect(Collectors.toList());
     }
 
